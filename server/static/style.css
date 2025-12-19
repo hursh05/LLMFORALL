@@ -10,7 +10,7 @@ body {
     color: #222;
 }
 
-/* Header */
+
 header {
     background: #0f172a;
     color: white;
@@ -25,14 +25,14 @@ header {
     font-weight: bold;
 }
 
-/* Main Layout */
+
 main {
     max-width: 1100px;
     margin: 40px auto;
     padding: 20px;
 }
 
-/* Upload Section */
+
 .upload-section, .chat-section {
     background: white;
     padding: 25px;
@@ -70,7 +70,7 @@ button:hover {
     background: #1e40af;
 }
 
-/* Chat */
+
 #chat-box {
     min-height: 300px;
     border: 1px solid #ddd;
@@ -94,7 +94,7 @@ button:hover {
     color: #0f172a;
 }
 
-/* Footer */
+
 footer {
     background: #0f172a;
     color: white;

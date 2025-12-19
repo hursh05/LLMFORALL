@@ -1,4 +1,4 @@
-// Disclaimer
+
 const modal = document.getElementById("disclaimer-modal");
 const closeBtn = document.getElementById("close-modal");
 const acceptBtn = document.getElementById("accept-btn");
@@ -6,7 +6,7 @@ const acceptBtn = document.getElementById("accept-btn");
 closeBtn.onclick = () => modal.style.display = "none";
 acceptBtn.onclick = () => modal.style.display = "none";
 
-// Upload PDFs
+
 async function uploadPDFs() {
     const input = document.getElementById("pdfInput");
     const status = document.getElementById("upload-status");
@@ -35,7 +35,7 @@ async function uploadPDFs() {
     }
 }
 
-// Ask Question
+
 async function askQuestion() {
     const input = document.getElementById("questionInput");
     const chatBox = document.getElementById("chat-box");
