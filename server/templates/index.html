@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>RAG Document Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- 🔔 Disclaimer Modal -->
+<div id="disclaimer-modal" class="modal">
+    <div class="modal-content">
+        <span id="close-modal" class="close">&times;</span>
+        <h2>⚠️ Disclaimer</h2>
+        <p>
+            This application uses free-tier AI APIs and has **limited token usage**.
+            Please use the system responsibly.
+        </p>
+        <p>
+            Responses may be incomplete or unavailable if limits are exceeded.
+        </p>
+        <button id="accept-btn">I Understand</button>
+    </div>
+</div>
+
+<!-- 🧠 Header -->
+<header>
+    <div class="logo">RAG Assistant</div>
+    <nav>
+        <span>Document QA System</span>
+    </nav>
+</header>
+
+<!-- 📄 Main -->
+<main>
+    <!-- Upload Section -->
+    <section class="upload-section">
+        <h2>📄 Upload Documents</h2>
+        <input type="file" id="pdfInput" multiple />
+        <button onclick="uploadPDFs()">Upload</button>
+        <p id="upload-status"></p>
+    </section>
+
+    <!-- Chat Section -->
+    <section class="chat-section">
+        <h2>💬 Ask Questions</h2>
+        <div id="chat-box"></div>
+
+        <div class="chat-input">
+            <input type="text" id="questionInput" placeholder="Ask something about the document..." />
+            <button onclick="askQuestion()">Send</button>
+        </div>
+    </section>
+</main>
+
+<!-- 👣 Footer -->
+<footer>
+    <p>© 2025 Hursh Karnik. All rights reserved.</p>
+</footer>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
