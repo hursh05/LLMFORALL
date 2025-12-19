@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Form
+from server.modules.llm import generate_answer
+from server.modules.query_handlers import search_similar_docs
+from server.logger import logger
+from fastapi import APIRouter, Form
 from pinecone import Pinecone
 from cohere import Client as CohereClient
-from modules.llm import generate_answer
 import os
-
 router = APIRouter()
 
 co = CohereClient(os.environ["COHERE_API_KEY"])

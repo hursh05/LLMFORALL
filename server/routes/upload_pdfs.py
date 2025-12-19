@@ -1,5 +1,6 @@
 from fastapi import APIRouter, UploadFile, File
-from modules.load_vectorstore import load_vectorstore
+from server.modules.load_vectorstore import load_vectorstore
+
 
 router = APIRouter()
 

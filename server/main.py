@@ -3,8 +3,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
-from routes.upload_pdfs import router as upload_router
-from routes.ask_questions import router as ask_router
+from server.routes.upload_pdfs import router as upload_router
+from server.routes.ask_questions import router as ask_router
 
 app = FastAPI(title="LLM For All")
 
@@ -15,16 +15,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="server/static"), name="static")
+templates = Jinja2Templates(directory="server/templates")
 
 @app.get("/")
 async def home(request: Request):
-    return templates.TemplateResponse(
-        "index.html",
-        {"request": request}
-    )
+    return templates.TemplateResponse("index.html", {"request": request})
 
 app.include_router(upload_router)
 app.include_router(ask_router)
