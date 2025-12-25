@@ -1,63 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>RAG Document Assistant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>LLM4All Assistant</title>
+    
     <link rel="stylesheet" href="/static/style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 <body>
 
+    <div class="app-container">
+        
+        <div id="mobile-overlay" class="mobile-overlay"></div>
 
-<div id="disclaimer-modal" class="modal">
-    <div class="modal-content">
-        <span id="close-modal" class="close">&times;</span>
-        <h2>⚠️ Disclaimer</h2>
-        <p>
-            This application uses free-tier AI APIs and has **limited token usage**.
-            Please use the system responsibly.
-        </p>
-        <p>
-            Responses may be incomplete or unavailable if limits are exceeded.
-        </p>
-        <button id="accept-btn">I Understand</button>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-top">
+                <div class="logo-area">
+                    <div class="logo-icon">
+                        <i class="ri-brain-line"></i>
+                    </div>
+                    <span>LLM4All</span>
+                </div>
+                <button id="close-sidebar-btn" class="icon-btn mobile-only">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <div class="sidebar-body">
+                <div class="panel-card">
+                    <div class="card-header">
+                        <i class="ri-database-2-line"></i>
+                        <h3>Knowledge Base</h3>
+                    </div>
+                    <p class="card-desc">Upload documents to power the LLM context.</p>
+                    
+                    <div class="upload-zone" id="drop-zone">
+                        <input type="file" id="pdfInput" multiple hidden />
+                        <label class="upload-content" for="pdfInput">
+
+                            <i class="ri-upload-cloud-2-line"></i>
+                            <span>Tap to Browse</span>
+                        </label>
+                    </div>
+                    <span id="file-status">No active documents</span>
+                    
+                    <button onclick="uploadPDFs()" id="upload-btn" class="action-btn" disabled>
+                        Initialize Context <i class="ri-arrow-right-line"></i>
+                    </button>
+                    <div id="upload-loader" class="loader-line"></div>
+                </div>
+
+                <div class="theme-toggle-wrapper">
+                     <button id="theme-toggle" class="theme-btn">
+                        <i class="ri-moon-clear-line" id="theme-icon"></i>
+                        <span>Switch Theme</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="user-badge">
+                    <div class="status-indicator"></div>
+                    <span>LLM4All Online</span>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Hursh Karnik</p>
+                    <p>LLMFORALL • All Rights Reserved</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="chat-viewport">
+            <header class="chat-header">
+                <div class="header-left">
+                    <button id="mobile-menu-btn" class="icon-btn mobile-only">
+                        <i class="ri-menu-4-line"></i>
+                    </button>
+                    <div class="header-title">
+                        <h2>Session #001</h2>
+                        <span class="tag">Active</span>
+                    </div>
+                </div>
+                <button class="clear-btn" onclick="clearChat()">
+                    <i class="ri-delete-bin-line"></i> <span class="desktop-text">Clear Chat</span>
+                </button>
+            </header>
+
+            <div id="chat-box" class="chat-stream">
+                <div class="msg-row bot-row">
+                    <div class="msg-bubble welcome-bubble">
+                        <div class="welcome-icon"><i class="ri-robot-2-line"></i></div>
+                        <h3>Welcome to LLM4All</h3>
+                        <p>I am ready to assist. Please upload a PDF in the sidebar menu to begin.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-box">
+                    <input type="text" id="questionInput" placeholder="Message LLM4All..." autocomplete="off">
+                    <button id="send-btn" onclick="askQuestion()">
+                        <i class="ri-send-plane-fill"></i>
+                    </button>
+                </div>
+                <div class="disclaimer">LLM4All Enterprise System. &copy; 2025 Hursh Karnik.</div>
+            </div>
+        </main>
     </div>
-</div>
 
-
-<header>
-    <div class="logo">RAG Assistant</div>
-    <nav>
-        <span>Document QA System</span>
-    </nav>
-</header>
-
-
-<main>
-
-    <section class="upload-section">
-        <h2>📄 Upload Documents</h2>
-        <input type="file" id="pdfInput" multiple />
-        <button onclick="uploadPDFs()">Upload</button>
-        <p id="upload-status"></p>
-    </section>
-
-
-    <section class="chat-section">
-        <h2>💬 Ask Questions</h2>
-        <div id="chat-box"></div>
-
-        <div class="chat-input">
-            <input type="text" id="questionInput" placeholder="Ask something about the document..." />
-            <button onclick="askQuestion()">Send</button>
+    <div id="disclaimer-modal" class="modal-backdrop">
+        <div class="modal-card">
+            <div class="modal-icon"><i class="ri-shield-keyhole-line"></i></div>
+            <h2>System Protocol</h2>
+            <p>This session is monitored for quality assurance. Usage is subject to API token limits.</p>
+            <button id="accept-btn" class="action-btn full">Acknowledge</button>
         </div>
-    </section>
-</main>
+    </div>
 
-<footer>
-    <p>© 2025 Hursh Karnik. All rights reserved.</p>
-</footer>
-
-<script src="/static/script.js"></script>
+    <script src="/static/script.js"></script>
 </body>
 </html>

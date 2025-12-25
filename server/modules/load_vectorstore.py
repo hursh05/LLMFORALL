@@ -14,28 +14,39 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 co = CohereClient(os.environ["COHERE_API_KEY"])
 pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
 
-index_name = os.environ["PINECONE_INDEX_NAME"]
-dimension = int(os.environ["PINECONE_DIMENSION"])
+INDEX_NAME = os.environ["PINECONE_INDEX_NAME"]
+DIMENSION = int(os.environ["PINECONE_DIMENSION"])
+ENV = os.environ["PINECONE_ENV"]
 
-if index_name not in [i["name"] for i in pc.list_indexes()]:
+if INDEX_NAME not in [i["name"] for i in pc.list_indexes()]:
     pc.create_index(
-        name=index_name,
-        dimension=dimension,
+        name=INDEX_NAME,
+        dimension=DIMENSION,
         metric="cosine",
-        spec=ServerlessSpec(cloud="aws", region=os.environ["PINECONE_ENV"])
+        spec=ServerlessSpec(cloud="aws", region=ENV)
     )
     time.sleep(5)
 
-index = pc.Index(index_name)
+index = pc.Index(INDEX_NAME)
+
 
 def load_vectorstore(files):
+    uploaded_doc_ids = []
+
     for file in files:
+        doc_id = Path(file.filename).stem
+        uploaded_doc_ids.append(doc_id)
+
         path = Path(UPLOAD_DIR) / file.filename
         with open(path, "wb") as f:
             f.write(file.file.read())
 
         reader = PdfReader(path)
-        text = "\n".join(page.extract_text() for page in reader.pages)
+        text = "\n".join(
+            page.extract_text()
+            for page in reader.pages
+            if page.extract_text()
+        )
 
         chunks = [text[i:i+800] for i in range(0, len(text), 800)]
 
@@ -46,9 +57,18 @@ def load_vectorstore(files):
         ).embeddings
 
         vectors = [
-            (f"{file.filename}-{i}", embeddings[i], {"text": chunks[i]})
+            (
+                f"{doc_id}-{i}",
+                embeddings[i],
+                {
+                    "text": chunks[i],
+                    "doc_id": doc_id
+                }
+            )
             for i in range(len(chunks))
         ]
 
         index.upsert(vectors=vectors)
         print(f"Uploaded {len(chunks)} chunks for {file.filename}")
+
+    return uploaded_doc_ids

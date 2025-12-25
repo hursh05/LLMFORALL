@@ -1,4 +1,7 @@
+# server/main.py
+
 from fastapi import FastAPI, Request
+from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,6 +10,12 @@ from server.routes.upload_pdfs import router as upload_router
 from server.routes.ask_questions import router as ask_router
 
 app = FastAPI(title="LLM For All")
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="llmforall-secret-key",
+    same_site="lax"
+)
 
 app.add_middleware(
     CORSMiddleware,
